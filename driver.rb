@@ -1,11 +1,23 @@
-# require_relative './bron1.rb'
-# require_relative './bron2.rb'
-# require_relative './bron3.rb'
-# require_relative './graph_generator.rb'
-require_relative './degeneracy_orderer.rb'
+require 'benchmark'
 
-# neighbors_hash = GraphGenerator.run(1000, 50)
+require_relative './bron1.rb'
+require_relative './bron2.rb'
+require_relative './bron3.rb'
+require_relative './graph_generator.rb'
 
-neighbors_hash = Hash[1, [2, 3], 2, [1, 3, 5], 3, [1, 2, 4, 5], 4, [3], 5, [2, 3]]
+neighbors_hash = GraphGenerator.run 70, 30
+p = (0..69).to_set
 
-DegeneracyOrderer.run neighbors_hash
+Benchmark.bm do |bm|
+  bm.report('Naive Bron-Kerbosch') do 
+    bron_kerbosch p, neighbors_hash
+  end
+
+  bm.report('Bron-Kerbosch with pivoting') do
+    bron_kerbosch_pivot p, neighbors_hash
+  end
+
+  bm.report('Bron-Kerbosch with vertex ordering') do
+    bron_kerbosch_vertex_ordering p, neighbors_hash
+  end
+end

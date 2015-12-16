@@ -37,7 +37,6 @@ class DegeneracyOrderer
       ordering.push(node_popped)
     end
 
-    print ordering
-    print "\n"
+    ordering
   end
 end
