@@ -5,19 +5,27 @@ require_relative './bron2.rb'
 require_relative './bron3.rb'
 require_relative './graph_generator.rb'
 
-neighbors_hash = GraphGenerator.run 70, 30
-p = (0..69).to_set
+number_of_nodes = [100, 100, 100, 250, 250]
+chance_of_each_edge = [10, 40, 46, 8, 24]
 
-Benchmark.bm do |bm|
-  bm.report('Naive Bron-Kerbosch') do 
-    bron_kerbosch p, neighbors_hash
-  end
+number_of_nodes.each_with_index do |num, i|
+  puts "#{num} nodes and #{chance_of_each_edge[i]}% chance of each edge\n"
 
-  bm.report('Bron-Kerbosch with pivoting') do
-    bron_kerbosch_pivot p, neighbors_hash
-  end
+  neighbors_hash = GraphGenerator.run num, chance_of_each_edge[i]
+  p = (0..(num - 1)).to_set
 
-  bm.report('Bron-Kerbosch with vertex ordering') do
-    bron_kerbosch_vertex_ordering p, neighbors_hash
+  Benchmark.bm do |bm|
+    bm.report('Naive Bron-Kerbosch  ') do 
+      bron_kerbosch p, neighbors_hash
+    end
+
+    bm.report('Bron-Kerbosch Pivot  ') do
+      bron_kerbosch_pivot p, neighbors_hash
+    end
+
+    bm.report('Bron-Kerbosch w/ VO  ') do
+      bron_kerbosch_vertex_ordering p, neighbors_hash
+    end
+    puts
   end
 end
