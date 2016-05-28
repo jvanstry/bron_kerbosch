@@ -25,6 +25,24 @@ class GraphGenerator
         end
       end
     end
+
+    neighbors_map.each_pair{ |key, value|
+      neighbors_map[key] = value.sort
+    }
+  end
+
+  def self.build_complete_graph num_vertices
+    neighbors_map = Hash.new
+
+    num_vertices.times do |i|
+      neighbors_map[i] = (0..(num_vertices - 1)).to_a
+      neighbors_map[i].delete(i)
+    end
+
     neighbors_map
   end
 end
+
+# Neighbors map is nothing more than an extremely redundant graph!
+  # but what it is literally is a hash, where each node has a key and the value of 
+  # each key is a set of its neighbors
